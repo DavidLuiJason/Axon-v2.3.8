@@ -1,0 +1,8 @@
+{
+  "name": "AXON — Intelligence in Motion",
+  "description": "The new visual and functional foundation environment of AXON.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

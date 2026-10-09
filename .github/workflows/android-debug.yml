@@ -1,0 +1,102 @@
+name: Android Debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-debug-apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install JavaScript dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Web build
+        id: webbuild
+        run: npm run build
+
+      - name: Type check
+        id: typecheck
+        continue-on-error: true
+        run: npm run lint
+
+      - name: Background tests
+        id: tests
+        continue-on-error: true
+        run: npm run test:bg
+
+      - name: Kernel tests
+        id: kerneltests
+        continue-on-error: true
+        run: npm run test:kernel
+
+      - name: Chat session tests
+        id: chattests
+        continue-on-error: true
+        run: npm run test:chat
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Apply AXON Android overlay
+        run: |
+          chmod +x scripts/apply-android-overlay.sh
+          ./scripts/apply-android-overlay.sh
+
+      - name: Sync web build into Android project
+        run: npx cap sync android
+
+      - name: Assemble debug APK
+        id: apk
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v6
+        with:
+          name: axon-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      - name: Upload generated lockfile
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: package-lock
+          path: package-lock.json
+          if-no-files-found: warn
+
+      - name: Build summary
+        if: always()
+        run: |
+          {
+            echo "## AXON build summary"
+            echo "- Web build: ${{ steps.webbuild.outcome }}"
+            echo "- Type check: ${{ steps.typecheck.outcome }}"
+            echo "- Background tests: ${{ steps.tests.outcome }}"
+            echo "- Kernel tests: ${{ steps.kerneltests.outcome }}"
+            echo "- Chat session tests: ${{ steps.chattests.outcome }}"
+            echo "- Debug APK: ${{ steps.apk.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"

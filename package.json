@@ -1,0 +1,45 @@
+{
+  "name": "react-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist server.js",
+    "lint": "tsc --noEmit",
+    "test:chat": "tsx tests/chatSession.test.ts && tsx tests/crash.test.ts",
+    "test:bg": "tsx tests/elapsedFormat.test.ts && tsx tests/verdict.test.ts",
+    "test:kernel": "tsx tests/kernel.test.ts && tsx tests/brain.test.ts && tsx tests/tools.test.ts",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "android:assemble": "cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.2.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/cli": "^7.2.0",
+    "@capacitor/core": "^7.2.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/share": "^7.0.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/jszip": "^3.4.1",
+    "@vitejs/plugin-react": "^6.1.1",
+    "jszip": "^3.10.2",
+    "lucide-react": "^0.546.0",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^8.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.28.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.21.0",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,19 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Stage 6 — Android / Capacitor build outputs (append only)
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties/
+android/captures/
+android/.idea/
+android/*.iml
+android/app/release/
+.capacitor/

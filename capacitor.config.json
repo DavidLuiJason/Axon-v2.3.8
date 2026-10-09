@@ -1,0 +1,15 @@
+{
+  "appId": "com.axon.app",
+  "appName": "Axon",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "BackgroundJobs": {},
+    "FileSaver": {}
+  }
+}
